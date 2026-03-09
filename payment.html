@@ -1,0 +1,146 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Payment</title>
+    <link
+      rel="icon"
+      href="Image/Screenshot 2026-03-05 172537.png"
+      type="image/png"
+    />
+
+    <style>
+      body {
+        font-family: Arial;
+        background: #111;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .box {
+        background: #1f1f1f;
+        padding: 40px;
+        border-radius: 10px;
+        width: 350px;
+        text-align: center;
+      }
+
+      input {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: none;
+        border-radius: 5px;
+      }
+
+      button {
+        width: 50%;
+        padding: 12px;
+        border: none;
+        background: #ff3c00;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+        margin-left: 12px;
+        transition: 0.3s;
+        margin-top: 4px;
+      }
+      button:hover {
+        background: #d53809;
+        transform: scale(1.1);
+      }
+
+      .toast {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%) translateY(-100%);
+        padding: 14px 22px;
+        border-radius: 12px;
+        color: white;
+        font-weight: 500;
+        transition:
+          transform 0.5s ease,
+          opacity 0.5s ease;
+        opacity: 0;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+      }
+      .toast.show {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+      }
+      .toast.success {
+        background: linear-gradient(45deg, #00c853, #64dd17);
+      }
+
+      .toast.error {
+        background: linear-gradient(45deg, #d50000, #ff1744);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="box">
+      <h2>Payment 💳</h2>
+
+      <p id="planName"></p>
+
+      <input id="card" type="text" placeholder="Card Number" />
+      <input id="date" type="text" placeholder="MM/YY" />
+      <input id="cvv" type="text" placeholder="CVV" />
+      
+
+      <button onclick="pay()">Pay Now</button>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+      let plan = localStorage.getItem("selectedPlan");
+
+      document.getElementById("planName").innerText = "Selected Plan: " + (plan || "No plan selected");
+
+      function pay() {
+        let card = document.getElementById("card").value.trim();
+        let date = document.getElementById("date").value.trim();
+        let cvv = document.getElementById("cvv").value.trim();
+
+        if (!card || !date || !cvv) {
+          showToast("Please fill all fields🧾", "error");
+          return;
+        }
+        if (card.length < 12) {
+          showToast("Invalid card number", "error");
+          return;
+        }
+        if (cvv.length !== 3) {
+          showToast("Invalid CVV", "error");
+          return;
+        }
+
+        showToast("Payment Successful 💵", "success");
+
+        setTimeout(() => {
+          localStorage.setItem("membership", plan);
+          window.location.href = "profile.html";
+        }, 2000);
+      }
+
+      function showToast(message, type) {
+        const toast = document.getElementById("toast");
+
+        toast.innerText = message;
+
+        toast.className = `toast show ${type}`;
+
+        setTimeout(() => {
+          toast.className = "toast";
+        }, 3000);
+      }
+    </script>
+  </body>
+</html>

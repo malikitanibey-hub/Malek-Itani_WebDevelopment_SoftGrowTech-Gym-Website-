@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="Image/Screenshot 2026-03-05 172537.png"
+      type="image/png"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <title>Login | PowerFit Gym</title>
+
+    <style>
+      body {
+        font-family: Arial;
+        background: #0d0d0d;
+        color: #f5f5f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .container {
+        background: #1f1f1f;
+        padding: 40px;
+        width: 350px;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      .password-box {
+        position: relative;
+      }
+      .password-box input {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      .password-box i {
+        position: absolute;
+        right: -15px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #0d0d0d;
+      }
+
+      input {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0 15px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+
+      button {
+        width: 50%;
+        padding: 12px;
+        border: none;
+        background: #ff3c00;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: 0.3s;
+        margin-left: 4px;
+      }
+      button:hover {
+        background: #d53809;
+        transform: scale(1.1);
+      }
+
+      .switch {
+        margin-top: 15px;
+        cursor: pointer;
+        color: #ff3c00;
+      }
+
+      .toast {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%) translateY(-100%);
+        padding: 14px 22px;
+        border-radius: 12px;
+        color: white;
+        font-weight: 500;
+        transition:
+          transform 0.5s ease,
+          opacity 0.5s ease;
+        opacity: 0;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+      }
+      .toast.show {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+      }
+      .toast.success {
+        background: linear-gradient(45deg, #00c853, #64dd17);
+      }
+
+      .toast.error {
+        background: linear-gradient(45deg, #d50000, #ff1744);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h2 id="title">Login</h2>
+
+      <div id="toast" class="toast"></div>
+
+      <input type="text" id="username" placeholder="Username" />
+      <div class="password-box">
+        <input type="password" id="password" placeholder="Password" />
+        <i class="fa-solid fa-eye-slash" id="togglePassword"></i>
+      </div>
+
+      <button onclick="submitForm()">Login</button>
+
+      <p class="switch" onclick="switchForm()">Create account</p>
+    </div>
+
+    <script>
+      let isLogin = true;
+
+      function switchForm() {
+        let title = document.getElementById("title");
+        let btn = document.querySelector("button");
+        let switchText = document.querySelector(".switch");
+
+        if (isLogin) {
+          title.innerText = "Register";
+          btn.innerText = "Register";
+          switchText.innerText = "Already have an account?";
+          isLogin = false;
+        } else {
+          title.innerText = "Login";
+          btn.innerText = "Login";
+          switchText.innerText = "Create account";
+          isLogin = true;
+        }
+      }
+
+      function submitForm() {
+        let user = document.getElementById("username").value.trim();
+        let pass = document.getElementById("password").value.trim();
+
+        // Check if fields are empty
+        if (!user || !pass) {
+          showToast("Please fill in all fields", "error");
+          return; // Stop form submission
+        }
+
+        if (isLogin) {
+          let savedUser = localStorage.getItem("username");
+          let savedPass = localStorage.getItem("password");
+
+          if (user === savedUser && pass === savedPass) {
+            showToast("Login successful!", "success");
+            setTimeout(() => {
+              window.location.href = "index.html";
+            }, 1500);
+          } else {
+            showToast("Invalid username or password", "error");
+          }
+        } else {
+          // Optional: password length check
+          if (pass.length < 6) {
+            showToast("Password must be at least 6 characters", "error");
+            return;
+          }
+
+          localStorage.setItem("username", user);
+          localStorage.setItem("password", pass);
+          showToast("Account created! Now login.", "success");
+          setTimeout(() => {
+            switchForm();
+          }, 1500);
+        }
+      }
+
+      function showToast(message, type = "info") {
+        const toast = document.getElementById("toast");
+        toast.innerText = message;
+        toast.className = `toast show ${type}`;
+
+        setTimeout(() => {
+          toast.className = "toast";
+        }, 3000);
+      }
+
+      let eye = document.getElementById("togglePassword");
+      let password = document.getElementById("password");
+
+      eye.onclick = function () {
+        if (password.type === "password") {
+          password.type = "text";
+          eye.className = "fa-solid fa-eye";
+          eye.style.color = "red";
+        } else {
+          password.type = "password";
+          eye.className = "fa-solid fa-eye-slash";
+          eye.style.color = "black";
+        }
+      };
+    </script>
+  </body>
+</html>

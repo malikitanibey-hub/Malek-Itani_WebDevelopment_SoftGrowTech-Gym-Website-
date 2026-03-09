@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Profile | PowerFit Gym</title>
+
+    <style>
+      body {
+        font-family: Arial;
+        background: #0d0d0d;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .profile {
+        background: #1f1f1f;
+        padding: 40px;
+        border-radius: 10px;
+        text-align: center;
+        width: 350px;
+      }
+      .profile,
+      .box {
+        width: 90%;
+        max-width: 400px;
+      }
+      button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background: #ff3c00;
+        border: none;
+        color: white;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="profile">
+      <h2>User Profile</h2>
+      <p id="user"></p>
+      <p id="plan"></p>
+      <p id="status"></p>
+      <p id="next"></p>
+
+      <button onclick="logout()">Logout</button>
+      <button onclick="goHome()">Home Page</button>
+    </div>
+
+    <script>
+      let username = localStorage.getItem("username");
+      let membership = localStorage.getItem("selectedPlan");
+
+      document.getElementById("user").innerText =
+        "Username: " + (username || "Guest");
+
+      document.getElementById("plan").innerText =
+        "Membership Plan: " + (membership || "None");
+
+      function logout() {
+        localStorage.clear();
+        window.location.href = "index.html";
+      }
+
+      function goHome() {
+        window.location.href = "index.html";
+      }
+      document.getElementById("status").innerText =
+        "Membership Status: " + (membership ? "Active" : "Inactive");
+
+      document.getElementById("next").innerText = membership
+        ? "Next Payment: 30 days"
+        : "";
+    </script>
+  </body>
+</html>
